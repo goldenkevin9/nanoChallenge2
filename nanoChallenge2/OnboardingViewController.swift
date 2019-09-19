@@ -16,7 +16,8 @@ class OnboardingViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-
+    @IBOutlet weak var mybutton: UIButton!
+    
     @IBAction func onboardingButton(_ sender: Any) {
         UserDefaults.standard.set(10, forKey: "lanjutkan")
     }

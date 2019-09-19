@@ -10,12 +10,15 @@ import Foundation
 import UIKit
 import CoreLocation
 import CoreData
+import LocalAuthentication
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     
     
     @IBOutlet weak var myTableView: UITableView!
+    
+    
     
     
     @IBAction func onAddTapped() {
@@ -25,9 +28,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         let action = UIAlertAction(title: "Tambah", style: .default) { (_) in
             guard let barangAndaArrayy = alert.textFields?.first?.text else { return }
-            print(barangAndaArrayy)
-//            let barang = Barang(context: PersistenceServce.context)
-            self.barangAndaArray.append(barangAndaArrayy)
+            // print(barangAndaArrayy)
+            let barang = Barang(context: PersistenceServce.context)
+            barang.namabarang = String(barangAndaArrayy)
+            PersistenceServce.saveContext()
+            self.barangAndaArray.append(barang)
             self.myTableView.reloadData()
         }
         
@@ -38,15 +43,57 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
     }
     
-//    var barangAndaArrayy: [NSManagedObject] = []
+    //    var barangAndaArrayy: [NSManagedObject] = []
     //geofencing
     var locationManager = CLLocationManager()
     
     // tabel daftar barang
-    var barangAndaArray = ["MacBook Pro", "USB C to Lightning", "USB-C to USB-C", "USB-A to Lightning", "Access Card", "Barang Pribadi Lainnya"]
+    var barangAndaArray = [Barang]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //        context = LAContext()
+        //        var error:NSError?
+        //
+        //        // edit line - deviceOwnerAuthentication
+        //        guard context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) else {
+        //            //showAlertViewIfNoBiometricSensorHasBeenDetected()
+        //            return
+        //        }
+        //
+        //        let reason = "Log in to your account"
+        //
+        //        // edit line - deviceOwnerAuthentication
+        //        if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) {
+        //
+        //            // edit line - deviceOwnerAuthentication
+        //            context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reason, reply: { (success, error) in
+        //                if success {
+        //                    DispatchQueue.main.async {
+        //                        print("Authentication was successful")
+        //                        self.state = .loggedin
+        //                        self.performSegue(withIdentifier: "faceID", sender: self)
+        //                    }
+        //                }else {
+        //                    DispatchQueue.main.async {
+        //                        //self.displayErrorMessage(error: error as! LAError )
+        //                        print("Authentication was error")
+        //                    }
+        //                }
+        //            })
+        //        }else {
+        //            // self.showAlertWith(title: "Error", message: (errorPointer?.localizedDescription)!)
+        //        }
+        
+        
+        let fetchRequest: NSFetchRequest<Barang> = Barang.fetchRequest()
+        
+        do {
+            let barangAndaArray = try PersistenceServce.context.fetch(fetchRequest)
+            self.barangAndaArray = barangAndaArray
+            self.myTableView.reloadData()
+        } catch {}
         
         // Do any additional setup after loading the view.
         myTableView.dataSource = self
@@ -91,15 +138,41 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath)
         
-        cell.textLabel!.text = barangAndaArray[indexPath.row]
+        cell.textLabel!.text = (barangAndaArray[indexPath.row].namabarang)
         return cell
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        guard editingStyle == .delete else {return }
+        guard editingStyle == .delete else {return}
+        print(barangAndaArray)
+//        let removedBarang = barangAndaArray[indexPath.row]
         barangAndaArray.remove (at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+        //
         
-        tableView.deleteRows(at: [indexPath], with: .automatic)
+        
+//        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Barang")
+//        fetchRequest.includesPropertyValues = false // Only fetch the managedObjectID (not the full object structure)
+        
+        //        let context = PersistenceServce.context
+        //
+        //        if let fetchResults = context.executeFetchRequest(fetchRequest, error: nil) as? [Barang] {
+        //            for result in fetchResults {
+        //                managedContext.deleteObject(removedBarang)
+        //            }
+        //        }
+        //        var err: NSError?
+        //        if !context.save(&err) {
+        //            print("- Error : \(err!.localizedDescription)")
+        //            abort()
+        //        } else {
+        //            print("- Success")
+        //
+        //
+        //            //
+        //            print(barangAndaArray)
+        //            PersistenceServce.saveContext()
+        //            tableView.deleteRows(at: [indexPath], with: .automatic)
         
         //    func save(name: String) {
         //            guard let barangAndaArray = UIApplication.shared.delegate as? AppDelegate else {

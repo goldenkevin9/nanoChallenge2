@@ -60,7 +60,7 @@
             let content = UNMutableNotificationContent()
             content.title = "Hati-hati di jalan"
             content.body = "Yuk, cek kembali barang bawaan anda agar tidak tertinggal!"
-            content.sound = UNNotificationSound.default
+            content.sound = UNNotificationSound.default()
             
             // when the notification will be triggered
             let timeInSeconds: TimeInterval = 3
