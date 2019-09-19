@@ -41,16 +41,25 @@
                 print("I woke up thanks to geofencing")
             }
             
-            
+            buatOnboarding()
+                
             return true
         }
         
+        func buatOnboarding(){
+            if UserDefaults.standard.value(forKey: "lanjutkan") != nil{
+                let startVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "vcKedua")
+                let share = UIApplication.shared.delegate as? AppDelegate
+                share?.window?.rootViewController = startVC
+                share?.window?.makeKeyAndVisible()
+            }
+        }
         func handleEvent(forRegion region: CLRegion!) {
             
             // customize your notification content
             let content = UNMutableNotificationContent()
-            content.title = "Awesome title"
-            content.body = "Well-crafted body message"
+            content.title = "Hati-hati di jalan"
+            content.body = "Yuk, cek kembali barang bawaan anda agar tidak tertinggal!"
             content.sound = UNNotificationSound.default
             
             // when the notification will be triggered
@@ -70,50 +79,50 @@
                 content: content,
                 trigger: trigger
             )
-            // MARK: - Core Data stack
-            
-           //lazy var persistentContainer: NSPersistentContainer = {
-                /*
-                 The persistent container for the application. This implementation
-                 creates and returns a container, having loaded the store for the
-                 application to it. This property is optional since there are legitimate
-                 error conditions that could cause the creation of the store to fail.
-                 */
-                //let container = NSPersistentContainer(name: "OneRepMax")
-                //container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-                  //  if let error = error as NSError? {
-                        // Replace this implementation with code to handle the error appropriately.
-                        // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                        
-                        /*
-                         Typical reasons for an error here include:
-                         * The parent directory does not exist, cannot be created, or disallows writing.
-                         * The persistent store is not accessible, due to permissions or data protection when the device is locked.
-                         * The device is out of space.
-                         * The store could not be migrated to the current model version.
-                         Check the error message to determine what the actual problem was.
-                         */
-                       // fatalError("Unresolved error \(error), \(error.userInfo)")
-                   // }
-               // })
-              //  return container
-          //  }()
-            
-            // MARK: - Core Data Saving support
-            
-         //   func saveContext () {
-               // let context = persistentContainer.viewContext
-               // if context.hasChanges {
-                 //   do {
-                   //     try context.save()
-                   // } catch {
-                        // Replace this implementation with code to handle the error appropriately.
-                        // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                     //   let nserror = error as NSError
-                       // fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-                   // }
-               // }
-           // }
+//            // MARK: - Core Data stack
+//
+//            lazy var persistentContainer: NSPersistentContainer = {
+//                /*
+//                 The persistent container for the application. This implementation
+//                 creates and returns a container, having loaded the store for the
+//                 application to it. This property is optional since there are legitimate
+//                 error conditions that could cause the creation of the store to fail.
+//                 */
+//                let container = NSPersistentContainer(name: "nanoChallenge2")
+//                container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+//                  if let error = error as NSError? {
+//                        // Replace this implementation with code to handle the error appropriately.
+//                        // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+//
+//                        /*
+//                         Typical reasons for an error here include:
+//                         * The parent directory does not exist, cannot be created, or disallows writing.
+//                         * The persistent store is not accessible, due to permissions or data protection when the device is locked.
+//                         * The device is out of space.
+//                         * The store could not be migrated to the current model version.
+//                         Check the error message to determine what the actual problem was.
+//                         */
+//                       fatalError("Unresolved error \(error), \(error.userInfo)")
+//                    }
+//                })
+//                return container
+//            }()
+//
+//            // MARK: - Core Data Saving support
+//
+//            func saveContext () {
+//                let context = persistentContainer.viewContext
+//                if context.hasChanges {
+//                    do {
+//                        try context.save()
+//                    } catch {
+//                        // Replace this implementation with code to handle the error appropriately.
+//                        // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+//                     //   let nserror = error as NSError
+//                       // fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+//                    }
+//                }
+//            }
             
             // trying to add the notification request to notification center
             notificationCenter.add(request, withCompletionHandler: { (error) in
@@ -138,7 +147,8 @@
         func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
             if region is CLCircularRegion {
                 // Do what you want if this information
-                self.handleEvent(forRegion: region)
+//                self.handleEvent(forRegion: region)
+                print("enter region")
             }
         }
     }

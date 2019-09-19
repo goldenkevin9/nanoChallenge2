@@ -26,6 +26,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let action = UIAlertAction(title: "Tambah", style: .default) { (_) in
             guard let barangAndaArrayy = alert.textFields?.first?.text else { return }
             print(barangAndaArrayy)
+//            let barang = Barang(context: PersistenceServce.context)
             self.barangAndaArray.append(barangAndaArrayy)
             self.myTableView.reloadData()
         }
@@ -70,7 +71,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         geofenceRegion.notifyOnExit = true
         
         self.locationManager.startMonitoring(for: geofenceRegion)
-        
+        self.locationManager.allowsBackgroundLocationUpdates = true
         
     }
     
